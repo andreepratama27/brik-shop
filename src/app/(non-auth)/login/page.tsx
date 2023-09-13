@@ -14,6 +14,9 @@ import * as z from "zod";
 import AppWrapper from "@/app/components/ui/app-wrapper";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   email: z.string().min(2, { message: "minimum 2 character " }),
@@ -21,19 +24,40 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const router = useRouter();
+  const [error, setError] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      body: JSON.stringify(values),
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      router.replace("/");
+    } else {
+      setError(result.message);
+      console.log(result.message);
+    }
   };
 
   return (
     <AppWrapper>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Upps!</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField

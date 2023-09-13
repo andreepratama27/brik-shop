@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -8,19 +9,17 @@ export async function POST(req: NextRequest) {
     where: { email: body.email },
   });
 
-  if (!!findData) {
-    return NextResponse.json(
-      {
-        findData,
-      },
-      { status: 200 }
-    );
+  if (!!findData && (await bcrypt.compare(body.password, findData.password))) {
+    return NextResponse.json({
+      success: true,
+      message: "Successfully login",
+      data: findData,
+    });
   }
 
-  return NextResponse.json(
-    {
-      message: "User not found",
-    },
-    { status: 404 }
-  );
+  return NextResponse.json({
+    success: false,
+    message: "User not found",
+    data: {},
+  });
 }

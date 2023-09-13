@@ -13,7 +13,10 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import * as z from "zod";
+import { useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   name: z.string(),
@@ -22,6 +25,8 @@ const formSchema = z.object({
 });
 
 export default function Register() {
+  const router = useRouter();
+  const [error, setError] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema as any),
     defaultValues: {
@@ -31,12 +36,29 @@ export default function Register() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const response = await fetch("/api/register", {
+      method: "POST",
+      body: JSON.stringify(values),
+    });
+    const result = await response.json();
+
+    if (result.success) {
+      router.replace("/login");
+    } else {
+      setError(result.message);
+    }
   };
 
   return (
     <AppWrapper>
+      {error && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Upps!</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
