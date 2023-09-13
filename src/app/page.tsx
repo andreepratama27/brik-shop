@@ -5,18 +5,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProductTable from "@/components/ui/product-table";
+import { Avatar, AvatarFallback } from "./components/ui/avatar";
+import AppWrapper from "./components/ui/app-wrapper";
 
 export default function Home() {
   return (
-    <>
-      <nav className="w-full h-14 flex items-center border-b-2 border-b-black">
-        <div className="max-w-2xl mx-auto w-full">
-          <div className="brand-title">
-            <p className="text-lg font-bold">Brik Shop.</p>
-          </div>
-        </div>
-      </nav>
-      <main className="max-w-2xl mx-auto w-full py-8">
+    <AppWrapper>
+      <main className="py-8">
         <div className="card-content grid grid-cols-2">
           <Card>
             <CardHeader>
@@ -30,6 +25,6 @@ export default function Home() {
           <ProductTable />
         </div>
       </main>
-    </>
+    </AppWrapper>
   );
 }
