@@ -3,15 +3,8 @@ import AppWrapper from "@/app/components/ui/app-wrapper";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -96,8 +89,8 @@ export default function AddProduct() {
             <div className="mb-4"></div>
 
             <select onChange={(evt) => setSelectedCategory(evt.target.value)}>
-              {category.map((item) => (
-                <option key={item.id} value={item.value}>
+              {category.map((item: Category) => (
+                <option key={item.id} value={item.name}>
                   {item.name}
                 </option>
               ))}

@@ -25,10 +25,3 @@ Then, login with user:
 ```
 email: admin@brik.id
 password: admin123
-```
-
-### Note
-please add this to your `.env`:
-```
-JSON_TOKEN_SECRET=your_secret_here
-```

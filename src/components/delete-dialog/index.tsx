@@ -11,11 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-export function DeleteDialog({
-  deleteAction,
-}: {
-  deleteAction: ({ productId }: { productId: string }) => void;
-}) {
+export function DeleteDialog({ deleteAction }: { deleteAction: () => void }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
