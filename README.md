@@ -15,3 +15,20 @@ pnpm dlx prisma migrate dev --init
 ```
 
 This command will create the database for you.
+
+After installing, please **Run data seeder** with this command:
+```
+pnpm seed
+```
+
+Then, login with user:
+```
+email: admin@brik.id
+password: admin123
+```
+
+### Note
+please add this to your `.env`:
+```
+JSON_TOKEN_SECRET=your_secret_here
+```
