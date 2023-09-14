@@ -5,8 +5,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProductTable from "@/components/ui/product-table";
-import { Avatar, AvatarFallback } from "./components/ui/avatar";
-import AppWrapper from "./components/ui/app-wrapper";
+import AppWrapper from "../components/ui/app-wrapper";
 
 export default function Home() {
   return (
