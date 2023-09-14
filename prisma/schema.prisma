@@ -11,8 +11,26 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  email String @unique
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
   password String
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category  String
+  description String
+  weight      Int
+  width       Int
+  length      Int
+  height      Int
+  imgSrc      String
+  price       Int
 }

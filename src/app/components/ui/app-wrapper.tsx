@@ -9,8 +9,8 @@ export default function AppWrapper({
 }) {
   return (
     <>
-      <nav className="w-full h-14 flex items-center border-b-2 border-b-black">
-        <div className="max-w-2xl mx-auto w-full flex justify-between items-center">
+      <nav className="w-full h-14 flex items-center border-b-2 border-b-black bg-white fixed">
+        <div className="max-w-4xl mx-auto w-full flex justify-between items-center">
           <div className="brand-title">
             <Link href="/" className="text-lg font-bold">
               Brik Shop.
@@ -25,7 +25,7 @@ export default function AppWrapper({
         </div>
       </nav>
 
-      <div className="max-w-2xl w-full mx-auto py-4">{children}</div>
+      <div className="max-w-4xl w-full mx-auto pt-20">{children}</div>
     </>
   );
 }
