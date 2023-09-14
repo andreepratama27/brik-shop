@@ -6,39 +6,67 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import CategoryDialog from "@/components/category-dialog";
 import { useEffect, useState } from "react";
+import { DeleteDialog } from "@/components/delete-dialog";
+import { getCategory } from "@/app/service/category.service";
+import type { Category } from "@prisma/client";
 
 export default function CategoryTable() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Category[]>([]);
 
-  const getData = async () => {
-    const response = await fetch("/api/category", { method: "GET" });
-    const result = await response.json();
+  const fetchCategory = async () => {
+    const categories = await getCategory();
+    setData(categories.data);
+  };
 
-    setData(result.data);
+  const deleteCategory = async ({ id }: { id: number }) => {
+    const response = await fetch("/api/category", {
+      method: "DELETE",
+      body: JSON.stringify({ id }),
+    });
+
+    if (response.ok) {
+      fetchCategory();
+    }
   };
 
   useEffect(() => {
-    getData();
+    fetchCategory();
   }, []);
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[100px]">ID</TableHead>
-          <TableHead>Nama Kategori</TableHead>
-        </TableRow>
-      </TableHeader>
+    <>
+      <div className="button-wrapper mb-4">
+        <CategoryDialog onSuccess={fetchCategory} />
+      </div>
 
-      <TableBody>
-        {data.map((item) => (
-          <TableRow key={item.id}>
-            <TableCell>{item.id}</TableCell>
-            <TableCell>{item.name}</TableCell>
+      <Table className="border">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead>Nama Kategori</TableHead>
+            <TableHead>Opsi</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={item.id}>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>
+                <div className="option-wrap flex gap-2">
+                  <CategoryDialog category={item} onSuccess={fetchCategory} />
+                  <DeleteDialog
+                    deleteAction={() => deleteCategory({ id: item.id })}
+                  />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }

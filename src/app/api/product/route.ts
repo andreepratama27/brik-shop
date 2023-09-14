@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const response = await prisma.product.findFirst();
+  const response = await prisma.product.findMany();
 
   return NextResponse.json({
     data: response,
@@ -21,5 +21,18 @@ export async function POST(request: NextRequest) {
     data: response,
     success: true,
     message: "Success add new product",
+  });
+}
+
+export async function DELETE(request: NextRequest) {
+  const body = await request.json();
+  const response = await prisma.product.delete({
+    where: { id: body.id },
+  });
+
+  return NextResponse.json({
+    data: null,
+    success: true,
+    message: "Success delete product",
   });
 }

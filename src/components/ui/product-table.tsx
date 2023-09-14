@@ -1,77 +1,86 @@
+"use client";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "./table";
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import { formatCurrency } from "@/app/lib/utils";
+import { DeleteDialog } from "../delete-dialog";
+import type { Product } from "@prisma/client";
+import { getProduct } from "@/app/service/product.service";
 
 export default function ProductTable() {
+  const [product, setProduct] = useState<Product[]>([]);
+
+  const fetchProduct = async () => {
+    const products = await getProduct();
+    setProduct(products.data);
+  };
+
+  const deleteProduct = async ({ productId }: { productId: number }) => {
+    const response = await fetch("/api/product", {
+      method: "DELETE",
+      body: JSON.stringify({ id: productId }),
+    });
+
+    if (response.ok) {
+      fetchProduct();
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="w-[100px]">Nama Produk</TableHead>
+          <TableHead>Deskripsi</TableHead>
+          <TableHead>Tinggi (cm)</TableHead>
+          <TableHead>Lebar (cm)</TableHead>
+          <TableHead>Panjang (cm)</TableHead>
+          <TableHead>Berat (cm)</TableHead>
+          <TableHead className="text-right">Harga</TableHead>
+          <TableHead className="text-right">Gambar</TableHead>
+          <TableHead className="text-center">Opsi</TableHead>
         </TableRow>
       </TableHeader>
 
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {product.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell className="font-medium">{item.name}</TableCell>
+            <TableCell>{item.description.slice(0, 10)}...</TableCell>
+            <TableCell>{item.length}</TableCell>
+            <TableCell className="text-right">{item.width}</TableCell>
+            <TableCell className="text-right">{item.length}</TableCell>
+            <TableCell className="text-right">{item.weight}</TableCell>
+            <TableCell className="text-right">
+              {formatCurrency(item.price)}
+            </TableCell>
+            <TableCell className="flex justify-end">
+              <div className="image-wrapper w-10 h-10 bg-red-500">
+                <Image
+                  className="w-full h-full"
+                  height={40}
+                  width={40}
+                  src={`/upload/${item.imgSrc}`}
+                  alt={item.name}
+                />
+              </div>
+            </TableCell>
+            <TableCell>
+              <DeleteDialog
+                deleteAction={() => deleteProduct({ productId: item.id })}
+              />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

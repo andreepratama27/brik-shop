@@ -1,14 +1,8 @@
 "use client";
 import AppWrapper from "@/app/components/ui/app-wrapper";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,55 +12,63 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-const formSchema = z.object({
-  name: z.string(),
-  categoryId: z.string(),
-  description: z.string(),
-  weight: z.number(),
-  width: z.number(),
-  length: z.number(),
-  height: z.number(),
-  imgSrc: z.string(),
-  price: z.number(),
-});
 
 export default function AddProduct() {
-  const [category, setCategory] = useState([]);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      categoryId: "",
-      description: "",
-      weight: 0,
-      width: 0,
-      length: 0,
-      height: 0,
-      imgSrc: "",
-      price: 0,
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const response = await fetch("/api/product", {
-      method: "POST",
-      body: JSON.stringify(values),
-    });
-    const result = await response.json();
-
-    console.log("fff", { response });
-  };
+  const router = useRouter();
+  const [file, setFile] = useState<File>();
+  const [category, setCategory] = useState<{ id: number; name: string }[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const fetchCategory = async () => {
     const response = await fetch("/api/category", { method: "GET" });
     const result = await response.json();
 
     setCategory(result.data);
+  };
+
+  const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
+    evt.preventDefault();
+    const formData = new FormData(evt.target as HTMLFormElement);
+    const fileData = new FormData();
+    fileData.set("file", file as File);
+
+    const name = formData.get("name");
+    const description = formData.get("description");
+    const width = Number(formData.get("width"));
+    const height = Number(formData.get("height"));
+    const length = Number(formData.get("length"));
+    const weight = Number(formData.get("weight"));
+    const price = Number(formData.get("price"));
+
+    const objData = {
+      name,
+      description,
+      width,
+      height,
+      length,
+      weight,
+      price,
+      category: selectedCategory,
+      imgSrc: file?.name as string,
+    };
+
+    const uploadFile = await fetch("/api/upload", {
+      method: "POST",
+      body: fileData,
+    });
+
+    if (uploadFile.ok) {
+      const submitProduct = await fetch("/api/product", {
+        method: "POST",
+        body: JSON.stringify(objData),
+      });
+
+      if (submitProduct.ok) {
+        router.push("/");
+      }
+    }
   };
 
   useEffect(() => {
@@ -78,7 +80,73 @@ export default function AddProduct() {
       <main className="">
         <p className="text-lg mb-4 font-bold">Tambah Produk</p>
 
-        <Form {...form}>
+        <form onSubmit={handleSubmit}>
+          <div className="form-section mb-4">
+            <Label>Nama</Label>
+            <Input name="name" className="mt-2" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Deskripsi Produk</Label>
+            <Textarea name="description" className="mt-2" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Kategori</Label>
+            <div className="mb-4"></div>
+
+            <select onChange={(evt) => setSelectedCategory(evt.target.value)}>
+              {category.map((item) => (
+                <option key={item.id} value={item.value}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Upload Image</Label>
+
+            <input
+              type="file"
+              name="file"
+              onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+                setFile(evt.target.files?.[0])
+              }
+            />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Harga (Rp)</Label>
+            <Input className="mt-4" name="price" type="number" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Lebar (cm)</Label>
+            <Input name="width" className="mt-4" type="number" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Tinggi (cm)</Label>
+            <Input name="height" type="number" className="mt-4" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Panjang (cm)</Label>
+            <Input name="length" type="number" className="mt-4" />
+          </div>
+
+          <div className="form-section mb-4">
+            <Label>Berat (kg)</Label>
+            <Input name="weight" type="number" className="mt-4" />
+          </div>
+
+          <div className="button-wrapper">
+            <Button>Tambahkan Produk</Button>
+          </div>
+        </form>
+
+        {/* <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
@@ -191,7 +259,7 @@ export default function AddProduct() {
               <Button>Tambahkan Produk</Button>
             </div>
           </form>
-        </Form>
+        </Form> */}
       </main>
     </AppWrapper>
   );
