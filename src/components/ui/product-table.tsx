@@ -13,6 +13,7 @@ import { formatCurrency } from "@/app/lib/utils";
 import { DeleteDialog } from "../delete-dialog";
 import type { Product } from "@prisma/client";
 import { getProduct } from "@/app/service/product.service";
+import Link from "next/link";
 
 export default function ProductTable() {
   const [product, setProduct] = useState<Product[]>([]);
@@ -56,7 +57,9 @@ export default function ProductTable() {
       <TableBody>
         {product.map((item) => (
           <TableRow key={item.id}>
-            <TableCell className="font-medium">{item.name}</TableCell>
+            <TableCell className="font-medium">
+              <Link href={`/detail-product/${item.id}`}>{item.name}</Link>
+            </TableCell>
             <TableCell>{item.description.slice(0, 10)}...</TableCell>
             <TableCell>{item.length}</TableCell>
             <TableCell className="text-right">{item.width}</TableCell>

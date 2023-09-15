@@ -1,7 +1,7 @@
 import { JwtSecret } from "@/lib/constants";
 import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const cookie = cookies();
