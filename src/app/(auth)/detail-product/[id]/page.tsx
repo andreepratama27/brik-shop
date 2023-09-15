@@ -32,12 +32,27 @@ export default function DetailProduct({ params }: { params: { id: number } }) {
         </div>
 
         <div className="product-detail w-full">
-          <div className="product--title">
+          <div className="product--title border-b-black border-b-2 mb-2">
             <p className="text-lg">{detail?.name}</p>
-            <p>{formatCurrency(detail?.price as number)}</p>
           </div>
 
-          <p>{detail?.description}</p>
+          <p>{formatCurrency(detail?.price as number)}</p>
+
+          <div className="product--description mt-4">
+            <p className="text-lg">Description</p>
+            <p>{detail?.description}</p>
+          </div>
+
+          <div className="product--spesification mt-4">
+            <p className="text-lg">Spesifikasi</p>
+
+            <ul>
+              <li>Berat: {detail?.weight}</li>
+              <li>Lebar: {detail?.width}</li>
+              <li>Tinggi: {detail?.height}</li>
+              <li>Panjang: {detail?.length}</li>
+            </ul>
+          </div>
         </div>
       </div>
     </AppWrapper>
