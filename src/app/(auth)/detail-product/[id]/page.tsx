@@ -19,8 +19,8 @@ export default function DetailProduct({ params }: { params: { id: number } }) {
 
   return (
     <AppWrapper>
-      <div className="flex justify-between gap-8">
-        <div className="image-wrapper w-[480px] h-[240px]">
+      <div className="flex justify-between gap-8 flex-col px-4 sm:px-4 sm:flex-col md:flex-row md:px-0">
+        <div className="image-wrapper w-72 h-72 md:w-[480px] md:h-[240px]">
           <div className="w-full h-full bg-black rounded relative">
             <Image
               alt={detail?.name as string}
@@ -44,13 +44,15 @@ export default function DetailProduct({ params }: { params: { id: number } }) {
           </div>
 
           <div className="product--spesification mt-4">
-            <p className="text-lg">Spesifikasi</p>
+            <p className="text-lg font-bold border-b-black border-b pb-1 mb-2">
+              Spesifikasi
+            </p>
 
             <ul>
-              <li>Berat: {detail?.weight}</li>
-              <li>Lebar: {detail?.width}</li>
-              <li>Tinggi: {detail?.height}</li>
-              <li>Panjang: {detail?.length}</li>
+              <li>Berat: {detail?.weight} kg</li>
+              <li>Lebar: {detail?.width} cm</li>
+              <li>Tinggi: {detail?.height} cm</li>
+              <li>Panjang: {detail?.length} cm</li>
             </ul>
           </div>
         </div>

@@ -70,7 +70,7 @@ export default function AddProduct() {
 
   return (
     <AppWrapper>
-      <main className="">
+      <main className="px-4 sm:px-4 md:px-0">
         <p className="text-lg mb-4 font-bold">Tambah Produk</p>
 
         <form onSubmit={handleSubmit}>
@@ -138,121 +138,6 @@ export default function AddProduct() {
             <Button>Tambahkan Produk</Button>
           </div>
         </form>
-
-        {/* <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Nama</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Deskripsi Produk</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="categoryId"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Kategori</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={String(field.value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih Kategori" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          {category.map((cat) => (
-                            <SelectItem key={cat.id} value={cat.name}>
-                              {cat.name}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="weight"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Berat</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="height"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Tinggi</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="width"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Lebar</FormLabel>
-                  <FormControl>
-                    <Input type="number" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="length"
-              render={({ field }) => (
-                <FormItem className="mb-4">
-                  <FormLabel>Panjang</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="number" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <div className="button-wrapper pt-4">
-              <Button>Tambahkan Produk</Button>
-            </div>
-          </form>
-        </Form> */}
       </main>
     </AppWrapper>
   );
